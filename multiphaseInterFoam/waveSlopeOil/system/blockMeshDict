@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.7.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           dictionary;
+    object          blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+minX    0.00;
+maxX    10.0;
+minY    0.00;
+maxY    0.01;
+minZ    0.00;
+maxZ    0.50;
+
+Nx      2000;
+Ny      1;
+Nz      100;
+
+convertToMeters 1;
+
+/*
+                 6 __________ 2      
+                 /|         /|    X  
+                /          / |   /   
+               /          /  |  /    
+              /      Z   /   | /     
+             /   5|_ |  /   _|       
+            /    /   | /     / 1     
+           /         |/     /        
+       7  /__________/     /         
+         |          3|    /          
+         |           |   /           
+         |           |  /            
+         |           | /             
+  Y_ _ _ |/__________|/              
+        4             0              
+*/
+
+vertices        
+(
+   ($minX       $minY       $minZ)
+   ($maxX       $minY       $minZ)
+   ($maxX       $minY       $maxZ)
+   ($minX       $minY       $maxZ)
+   ($minX       $maxY       $minZ)
+   ($maxX       $maxY       $minZ)
+   ($maxX       $maxY       $maxZ)
+   ($minX       $maxY       $maxZ)
+);
+
+blocks          
+(
+    hex (0 1 5 4 3 2 6 7)   ($Nx $Ny $Nz) simpleGrading (1 1 1)
+);
+
+edges           
+(
+);
+
+boundary         
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (1 5 6 2)
+        );
+    }
+    bottom
+    {
+        type wall;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+    empty1
+    {
+        type empty;
+        faces
+        (
+            (0 1 2 3)
+        );
+    }
+    empty2
+    {
+        type empty;
+        faces
+        (
+            (4 5 6 7)
+        );
+    }
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (3 2 6 7)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
