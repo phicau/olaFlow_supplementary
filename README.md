@@ -1,25 +1,27 @@
-# OpenFOAM-miscCases
+# olaFlow_supplementary
 ======
 
 # Description
 
-Miscellaneous OpenFOAM cases.
+Supplementary materials for the olaFlow project, including new solvers, modules and tutorials.
 
-Cases include Allrun and Allclean scripts for automatic running/cleaning the case.
+All tutorial cases include Allrun and Allclean scripts for automatic running/cleaning the case.
+
+Compatibility has been tested with the OpenFOAM versions reported only.
 
 # Cases
 
 ## multiphaseInterFoam
 
-### waveFlumeOil
+Multi-fluid tutorials (air-water-oil) with olaFlow waves.
 
-Regular waves on a flume in which a double dam break of oil occurs initially
-Video can be accessed at: https://youtu.be/UWJis1gCb0U
-Compatible with OpenFOAM v5.0
+Cases to be run with OpenFOAM's 5.0 vanilla solver multiphaseInterFoam.
 
+## olaIsoFlow
 
-### waveSlopeOil
+Coupling of isoAdvector (OpenFOAM v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
 
-Regular waves breaking on a slope, with a layer of oil on top of water
-Video can be accessed at: https://youtu.be/3lLAEg6XA54
-Compatible with OpenFOAM v5.0
+Tutorial case is a basic wave flume in 2D.
+
+----------------------------------------------------------
+OPENFOAM®  is a registered trade mark of OpenCFD Limited, producer and distributor of the OpenFOAM software via wwww.openfoam.com.
