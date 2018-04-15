@@ -1,27 +1,38 @@
-# olaFlow_supplementary
+olaFlow_supplementary
 ======
 
 # Description
 
-Supplementary materials for the olaFlow project, including new solvers, modules and tutorials.
+Supplementary materials for the olaFlow project (https://github.com/phicau/olaFlow), including new solvers, modules and tutorials.
 
-All tutorial cases include Allrun and Allclean scripts for automatic running/cleaning the case.
+All tutorials include Allrun and Allclean scripts for automatic running/cleaning the case.
 
-Compatibility has been tested with the OpenFOAM versions reported only.
+Compatibility has been tested with the OpenFOAM® versions reported only.
+
+# Download and compilation - Basic download guide
+
+To get a full copy of olaFlow supplementary materials, run in a terminal:
+
+`git clone git://github.com/phicau/olaFlow_supplementary.git`
+
+Updates can be downloaded in the future from the *olaFlow_supplementary* folder as follows:
+
+`git checkout`
+
+`git pull`
 
 # Cases
 
 ## multiphaseInterFoam
 
-Multi-fluid tutorials (air-water-oil) with olaFlow waves.
-
-Cases to be run with OpenFOAM's 5.0 vanilla solver multiphaseInterFoam.
+- Multi-fluid tutorials (air-water-oil) with olaFlow waves.
+- Cases to be run with OpenFOAM 5.0 vanilla solver *multiphaseInterFoam*.
 
 ## olaIsoFlow
 
-Coupling of isoAdvector (OpenFOAM v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
-
-Tutorial case is a basic wave flume in 2D.
+- Coupling of *isoAdvector* (OpenFOAM v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
+- Tutorial case is a basic wave flume in 2D.
+- More information can be found in: https://sites.google.com/view/olaflowcfd/blog/olaflow-coupling-with-isoadvector
 
 ----------------------------------------------------------
-OPENFOAM®  is a registered trade mark of OpenCFD Limited, producer and distributor of the OpenFOAM software via wwww.openfoam.com.
+OPENFOAM®  is a registered trade mark of OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com.
