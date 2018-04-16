@@ -5,13 +5,13 @@ olaFlow_supplementary
 
 Supplementary materials for the olaFlow project (https://github.com/phicau/olaFlow), including new solvers, modules and tutorials.
 
-All tutorials include Allrun and Allclean scripts for automatic running/cleaning the case.
+All tutorials include *run* and *clean* scripts for automatic running/cleaning the case.
 
 Compatibility has been tested with the OpenFOAM® versions reported only.
 
 # Download and compilation - Basic download guide
 
-To get a full copy of olaFlow supplementary materials, run in a terminal:
+To get a full copy of the olaFlow supplementary materials, run in a terminal:
 
 `git clone git://github.com/phicau/olaFlow_supplementary.git`
 
@@ -33,6 +33,18 @@ Updates can be downloaded in the future from the *olaFlow_supplementary* folder 
 - Coupling of *isoAdvector* (OpenFOAM v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
 - Tutorial case is a basic wave flume in 2D.
 - More information can be found in: https://sites.google.com/view/olaflowcfd/blog/olaflow-coupling-with-isoadvector
+
+## turbulenceMultiphase
+
+- Library that implements density-aware turbulence models for multiphase modelling. This development prevents turbulence buid-up to a large extent in wave simulations with olaFlow/OpenFOAM.
+- The tutorial case is a basic wave flume in 2D.
+- More information can be found in: https://sites.google.com/view/olaflowcfd/blog/turbulence-models-for-wave-simulations
+
+The new models are:
+
+- kEpsilonMultiphase
+- kOmegaSSTMultiphase
+- kOmegaSSTBuoyancy
 
 ----------------------------------------------------------
 OPENFOAM®  is a registered trade mark of OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com.

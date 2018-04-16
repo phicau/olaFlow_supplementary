@@ -1,0 +1,14 @@
+#!/bin/bash
+
+wclean all > /dev/null
+
+wmake libso
+
+if (( $? )) ; then 
+    echo "olaFlow multiphase turbulence library compilation failed"
+    exit; else
+    echo -e "\n\nolaFlow multiphase turbulence library compiled successfully for $WM_PROJECT $WM_PROJECT_VERSION\n\n\n";   
+fi
+
+wclean all > /dev/null
+
