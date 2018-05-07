@@ -13,7 +13,8 @@ The present implementation is (at least) compatible with OpenFOAM 5.0.0 and Open
 
 All the turbulence models in this library have been developed from the default turbulence models available in OpenFOAM and are solely based on the references given below.
 
-Although the authors of the paper have released their turbulence model in GitHub, which can be found here: https://github.com/BrechtDevolder-UGent-KULeuven/buoyancyModifiedTurbulenceModels, this implementation has not been used in the development of the present library.
+The authors of the paper have released their turbulence model in GitHub in which they also include a modified k-ω model and can be found here: https://github.com/BrechtDevolder-UGent-KULeuven/buoyancyModifiedTurbulenceModels  
+This implementation has not been used in the development of the present library.
 
 # Usage
 
@@ -49,9 +50,13 @@ Videos of the comparison between the different turbulence models can be accessed
 
 # References
 
-- **Application of a buoyancy-modified k-ω SST turbulence model to simulate wave run-up around a monopile subjected to regular waves using OpenFOAM**
-Brecht Devolder, Pieter Rauwoens & Peter Troch
+- **Application of a buoyancy-modified k-ω SST turbulence model to simulate wave run-up around a monopile subjected to regular waves using OpenFOAM**  
+Brecht Devolder, Pieter Rauwoens & Peter Troch  
 *Coastal Engineering* (2017), vol. 125, pp. 81–94 (https://doi.org/10.1016/j.coastaleng.2017.04.004)
+
+- **Performance of a buoyancy-modified k-ω and k-ω SST turbulence model for simulating wave breaking under regular waves using OpenFOAM®**  
+Brecht Devolder, Peter Troch & Pieter Rauwoens  
+*Coastal Engineering* (2018), vol. 138, pp. 49–65 (https://doi.org/10.1016/j.coastaleng.2018.04.011)
 
 - How to create custom turbulence models: http://hassankassem.me/posts/newturbulencemodel/
 
