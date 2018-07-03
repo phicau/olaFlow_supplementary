@@ -30,7 +30,7 @@ Updates can be downloaded in the future from the *olaFlow_supplementary* folder 
 
 ## olaIsoFlow
 
-- Coupling of *isoAdvector* (OpenFOAM v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
+- Coupling of *isoAdvector* (OpenFOAM 5.0 and v1706-v1712) sharp interface advection method with olaFlow wave boundary conditions.
 - Tutorial case is a basic wave flume in 2D.
 - More information can be found in: https://sites.google.com/view/olaflowcfd/blog/olaflow-coupling-with-isoadvector
 

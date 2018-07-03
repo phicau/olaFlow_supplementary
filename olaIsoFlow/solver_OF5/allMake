@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "Please enter isoAdvector path (e.g. /home/user/isoAdvector/OpenFOAM-5.0/src)"
+read -p "Path: " ISOADVECTION
+
+export ISOADVECTION=$ISOADVECTION
+
+wclean all > /dev/null
+
+wmake
+
+if (( $? )) ; then 
+    echo "olaIsoFlow compilation failed"
+    exit; else
+    echo -e "\n\nolaIsoFlow compiled successfully for $WM_PROJECT $WM_PROJECT_VERSION\n\n\n";   
+fi
+
+wclean all > /dev/null
