@@ -332,7 +332,7 @@ public:
         virtual tmp<volScalarField> rhoTP() const
         {
             return tmp<volScalarField>
-            ( 
+            (
                 this->mesh_.objectRegistry::lookupObject<volScalarField>("rho")
             );
         }
