@@ -48,6 +48,9 @@ Description
             Journal of Energy, 7(4), 345-353.
     \endverbatim
 
+    Changelog [Higuera]:
+    - Made multiphase-aware
+
     The default model coefficients are
     \verbatim
         kEpsilonMultiphaseCoeffs

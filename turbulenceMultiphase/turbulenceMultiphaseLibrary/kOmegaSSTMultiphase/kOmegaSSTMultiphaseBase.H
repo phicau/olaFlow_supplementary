@@ -75,6 +75,9 @@ Description
     uncertainty in their origin, range of applicability and that if y+ becomes
     sufficiently small blending u_tau in this manner clearly becomes nonsense.
 
+    Changelog [Higuera]:
+    - Made multiphase-aware
+
     The default model coefficients are
     \verbatim
         kOmegaSSTMultiphaseCoeffs
@@ -229,7 +232,7 @@ protected:
             const volScalarField::Internal& G
         ) const;
 
-        //- Return epsilon/k which for standard RAS is betaStar*omega
+        //- Return epsilon*k which for standard RAS is betaStar*omega
         virtual tmp<volScalarField::Internal> epsilonByk
         (
             const volScalarField::Internal& F1,

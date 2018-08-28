@@ -68,4 +68,7 @@ makeRASModel(kOmegaSSTMultiphase);
 #include "kOmegaSSTBuoyancy.H"
 makeRASModel(kOmegaSSTBuoyancy);
 
+#include "kOmegaSSTStable.H"
+makeRASModel(kOmegaSSTStable);
+
 // ************************************************************************* //

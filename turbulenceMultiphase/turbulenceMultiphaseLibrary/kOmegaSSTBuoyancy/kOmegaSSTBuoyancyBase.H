@@ -61,7 +61,7 @@ Description
 
     Note that this implementation is written in terms of alpha diffusion
     coefficients rather than the more traditional sigma (alpha = 1/sigma) so
-    that the blending can be applied to all coefficuients in a consistent
+    that the blending can be applied to all coefficients in a consistent
     manner.  The paper suggests that sigma is blended but this would not be
     consistent with the blending of the k-epsilon and k-omega models.
 
@@ -74,6 +74,15 @@ Description
     The blending functions (15) and (16) are not currently used because of the
     uncertainty in their origin, range of applicability and that if y+ becomes
     sufficiently small blending u_tau in this manner clearly becomes nonsense.
+
+    Changelog [Higuera]:
+    - Made multiphase-aware
+    - Added buoyancy term as described in:
+        Application of a buoyancy-modified k-ω SST turbulence model to simulate
+        wave run-up around a monopile subjected to regular waves using OpenFOAM
+        Brecht Devolder, Pieter Rauwoens & Peter Troch  
+        Coastal Engineering* (2017), vol. 125, pp. 81–94
+        (https://doi.org/10.1016/j.coastaleng.2017.04.004)
 
     The default model coefficients are
     \verbatim
@@ -91,6 +100,7 @@ Description
             a1          0.31;
             b1          1.0;
             c1          10.0;
+            sigmaT      0.85;
             F3          no;
         }
     \endverbatim
@@ -147,6 +157,8 @@ protected:
             dimensionedScalar a1_;
             dimensionedScalar b1_;
             dimensionedScalar c1_;
+
+            dimensionedScalar sigmaT_; // Buoyancy coefficient
 
             Switch F3_;
 
@@ -229,7 +241,7 @@ protected:
             const volScalarField::Internal& G
         ) const;
 
-        //- Return epsilon/k which for standard RAS is betaStar*omega
+        //- Return epsilon*k which for standard RAS is betaStar*omega
         virtual tmp<volScalarField::Internal> epsilonByk
         (
             const volScalarField::Internal& F1,
@@ -354,6 +366,12 @@ public:
                     this->nu()().boundaryField().types()
                 )
             );
+        }
+
+        //- Return the gravity field
+        virtual uniformDimensionedVectorField grav() const
+        {
+            return this->mesh_.objectRegistry::lookupObject<uniformDimensionedVectorField>("g");
         }
 
         //- Return the turbulence kinetic energy dissipation rate

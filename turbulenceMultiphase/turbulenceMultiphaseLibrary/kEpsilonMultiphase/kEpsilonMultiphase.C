@@ -230,7 +230,7 @@ void kEpsilonMultiphase<BasicTurbulenceModel>::correct()
     const alphaField& alpha = this->alpha_;
     // const rhoField& rho = this->rho_;
     const volScalarField& rho = rhoTP();
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    const surfaceScalarField alphaRhoPhi = this->alphaRhoPhi_*fvc::interpolate(rho);
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
@@ -257,7 +257,7 @@ void kEpsilonMultiphase<BasicTurbulenceModel>::correct()
     tmp<fvScalarMatrix> epsEqn
     (
         fvm::ddt(alpha, rho, epsilon_)
-      + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), epsilon_)
+      + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         C1_*alpha()*rho()*G*epsilon_()/k_()
@@ -278,7 +278,7 @@ void kEpsilonMultiphase<BasicTurbulenceModel>::correct()
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)
-      + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), k_)
+      + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
         alpha()*rho()*G

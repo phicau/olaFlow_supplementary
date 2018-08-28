@@ -426,7 +426,7 @@ void kOmegaSSTMultiphase<TurbulenceModel, BasicTurbulenceModel>::correct()
     const alphaField& alpha = this->alpha_;
     // const rhoField& rho = this->rho_;
     const volScalarField& rho = rhoTP();
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    const surfaceScalarField alphaRhoPhi = this->alphaRhoPhi_*fvc::interpolate(rho);
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
@@ -463,7 +463,7 @@ void kOmegaSSTMultiphase<TurbulenceModel, BasicTurbulenceModel>::correct()
         tmp<fvScalarMatrix> omegaEqn
         (
             fvm::ddt(alpha, rho, omega_)
-          + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), omega_)
+          + fvm::div(alphaRhoPhi, omega_)
           - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
          ==
             alpha()*rho()*gamma
@@ -497,7 +497,7 @@ void kOmegaSSTMultiphase<TurbulenceModel, BasicTurbulenceModel>::correct()
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)
-      + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), k_)
+      + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(F1), k_)
      ==
         alpha()*rho()*Pk(G)

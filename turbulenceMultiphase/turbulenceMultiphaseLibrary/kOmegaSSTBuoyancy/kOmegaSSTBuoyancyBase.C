@@ -342,6 +342,15 @@ kOmegaSSTBuoyancy<TurbulenceModel, BasicTurbulenceModel>::kOmegaSSTBuoyancy
             10.0
         )
     ),
+    sigmaT_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "sigmaT",
+            this->coeffDict_,
+            0.85
+        )
+    ),
     F3_
     (
         Switch::lookupOrAddToDict
@@ -403,6 +412,7 @@ bool kOmegaSSTBuoyancy<TurbulenceModel, BasicTurbulenceModel>::read()
         a1_.readIfPresent(this->coeffDict());
         b1_.readIfPresent(this->coeffDict());
         c1_.readIfPresent(this->coeffDict());
+        sigmaT_.readIfPresent(this->coeffDict());
         F3_.readIfPresent("F3", this->coeffDict());
 
         return true;
@@ -426,7 +436,7 @@ void kOmegaSSTBuoyancy<TurbulenceModel, BasicTurbulenceModel>::correct()
     const alphaField& alpha = this->alpha_;
     // const rhoField& rho = this->rho_;
     const volScalarField& rho = rhoTP();
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    const surfaceScalarField alphaRhoPhi = this->alphaRhoPhi_*fvc::interpolate(rho);
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
@@ -463,7 +473,7 @@ void kOmegaSSTBuoyancy<TurbulenceModel, BasicTurbulenceModel>::correct()
         tmp<fvScalarMatrix> omegaEqn
         (
             fvm::ddt(alpha, rho, omega_)
-          + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), omega_)
+          + fvm::div(alphaRhoPhi, omega_)
           - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
          ==
             alpha()*rho()*gamma
@@ -493,22 +503,17 @@ void kOmegaSSTBuoyancy<TurbulenceModel, BasicTurbulenceModel>::correct()
         bound(omega_, this->omegaMin_);
     }
 
-    // Buoyancy term variables
-    const scalar sigmaT = 0.85;
-    const uniformDimensionedVectorField& grav =
-        this->mesh_.objectRegistry::lookupObject<uniformDimensionedVectorField>("g");
-
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)
-      + fvm::div(alphaRhoPhi*fvc::interpolate(rhoTP()), k_)
+      + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(F1), k_)
      ==
         alpha()*rho()*Pk(G)
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
       - fvm::Sp(alpha()*rho()*epsilonByk(F1, F23), k_)
-      - this->nut_/sigmaT*(grav&fvc::grad(rho)) // Buoyancy term
+      - this->nut_/sigmaT_*(grav()&fvc::grad(rho)) // Buoyancy term
       + kSource()
       + fvOptions(alpha, rho, k_)
     );
