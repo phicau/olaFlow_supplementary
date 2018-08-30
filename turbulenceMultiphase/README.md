@@ -3,18 +3,20 @@ olaFlow_supplementary - turbulenceMultiphase
 
 # Description
 
-OpenFOAM® does not provide by default incompressible turbulence models for multiphase systems (i.e. models that take into account the density variation between the air and water phases). This often results in an excessive wave damping as the simulation progresses, due to turbulence build-up (increasing *nut*).
+OpenFOAM® does not provide by default incompressible turbulence models for multiphase systems (i.e. models that take into account the density variation between the air and water phases). Moreover, two-equation turbulence models have recently been proven unstable by Larsen & Fuhrman (2018). This often results in an excessive wave damping as the simulation progresses, due to turbulence build-up (increasing *nut*).
 
-This repository provides modified versions of k-ε and k-ω SST turbulence models to simulate correctly multiphase systems and mitigate this effect (*kEpsilonMultiphase*, *kOmegaSSTMultiphase*).
+This repository provides modified versions of k-ε and k-ω SST turbulence models to simulate correctly multiphase systems, accounting for the density of each phase in the equations (*kEpsilonMultiphase*, *kOmegaSSTMultiphase*).
 
-Moreover, a new variation of the k-ω SST model was recently proposed in an excellent paper by Devolder et al. (2017) to model free surface cases (e.g. waves) correctly. The new model (*kOmegaSSTBuoyancy*) features an additional buoyancy term that helps suppress the spurious turbulence generation at the free surface.
+Moreover, new variations of the k-ω SST model were recently proposed in two excellent papers by Devolder et al. (2017, 2018) and Larsen & Fuhrman (2018) to model free surface cases (e.g. waves) correctly. The new models (*kOmegaSSTBuoyancy*, *kOmegaSSTStable*) feature an additional buoyancy term that helps suppress the spurious turbulence generation at the free surface. *kOmegaSSTStable* also includes a modified *nut* formulation to convert mitigate the instability.
 
-The present implementation is (at least) compatible with OpenFOAM 5.0.0 and OpenFOAM v1712.
+The present implementation is (at least) compatible with OpenFOAM 5/6/dev and OpenFOAM v1712-v1806.
 
-All the turbulence models in this library have been developed from the default turbulence models available in OpenFOAM and are solely based on the references given below.
+All the turbulence models in this library have been developed from the default turbulence models available in OpenFOAM, based on the references given.
 
-The authors of the paper have released their turbulence model in GitHub in which they also include a modified k-ω model and can be found here: https://github.com/BrechtDevolder-UGent-KULeuven/buoyancyModifiedTurbulenceModels  
-This implementation has not been used in the development of the present library.
+Devolder et al. have released their turbulence model in GitHub in which they also include a modified k-ω model and can be found here: https://github.com/BrechtDevolder-UGent-KULeuven/buoyancyModifiedTurbulenceModels  
+
+Larsen & Fuhrman have released their turbulence model in GitHub in which they also include other modified models and can be found here: 
+https://github.com/BjarkeEltardLarsen/RANS_stableOF50
 
 # Usage
 
@@ -31,6 +33,7 @@ Then, select either of the following in *turbulenceProperties*:
 - kEpsilonMultiphase
 - kOmegaSSTMultiphase
 - kOmegaSSTBuoyancy
+- kOmegaSSTStable
 
 # Contents
 
@@ -57,6 +60,11 @@ Brecht Devolder, Pieter Rauwoens & Peter Troch
 - **Performance of a buoyancy-modified k-ω and k-ω SST turbulence model for simulating wave breaking under regular waves using OpenFOAM®**  
 Brecht Devolder, Peter Troch & Pieter Rauwoens  
 *Coastal Engineering* (2018), vol. 138, pp. 49–65 (https://doi.org/10.1016/j.coastaleng.2018.04.011)
+
+- **On the over-production of turbulence beneath surface waves in RANS models**  
+Larsen, B.E. & Fuhrman, D.R.  
+*Journal of Fluid Mechanics* (2018), vol. 853, pp. 419-460
+(https://doi.org/10.1017/jfm.2018.577)
 
 - How to create custom turbulence models: http://hassankassem.me/posts/newturbulencemodel/
 
