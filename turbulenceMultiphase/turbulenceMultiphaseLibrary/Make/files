@@ -1,3 +1,0 @@
-makeMultiphaseTurbulenceModel.C
-
-LIB = $(FOAM_USER_LIBBIN)/libturbulenceMultiphaseOlaFlowModels

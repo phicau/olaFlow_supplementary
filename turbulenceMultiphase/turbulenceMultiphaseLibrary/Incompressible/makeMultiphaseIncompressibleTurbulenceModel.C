@@ -59,16 +59,16 @@ makeTemplatedTurbulenceModel                                               \
 // RAS models
 // -------------------------------------------------------------------------- //
 
-#include "kEpsilonMultiphase.H"
+#include "../kEpsilonMultiphase/kEpsilonMultiphase.H"
 makeRASModel(kEpsilonMultiphase);
 
-#include "kOmegaSSTMultiphase.H"
+#include "../kOmegaSSTMultiphase/kOmegaSSTMultiphase.H"
 makeRASModel(kOmegaSSTMultiphase);
 
-#include "kOmegaSSTBuoyancy.H"
+#include "../kOmegaSSTBuoyancy/kOmegaSSTBuoyancy.H"
 makeRASModel(kOmegaSSTBuoyancy);
 
-#include "kOmegaSSTStable.H"
+#include "../kOmegaSSTStable/kOmegaSSTStable.H"
 makeRASModel(kOmegaSSTStable);
 
 // ************************************************************************* //

@@ -2,12 +2,20 @@
 
 wclean all > /dev/null
 
-wmake libso
+wmake libso Incompressible/
 
 if (( $? )) ; then 
-    echo "olaFlow multiphase turbulence library compilation failed"
+    echo "olaFlow multiphase incompressible turbulence library compilation failed"
     exit; else
-    echo -e "\n\nolaFlow multiphase turbulence library compiled successfully for $WM_PROJECT $WM_PROJECT_VERSION\n\n\n";   
+    echo -e "\n\nolaFlow multiphase incompressible turbulence library compiled successfully for $WM_PROJECT $WM_PROJECT_VERSION\n\n\n";   
+fi
+
+wmake libso Compressible/
+
+if (( $? )) ; then 
+    echo "olaFlow multiphase compressible turbulence library compilation failed"
+    exit; else
+    echo -e "\n\nolaFlow multiphase compressible turbulence library compiled successfully for $WM_PROJECT $WM_PROJECT_VERSION\n\n\n";   
 fi
 
 wclean all > /dev/null
