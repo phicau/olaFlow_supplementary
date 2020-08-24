@@ -118,6 +118,11 @@ SourceFiles
 #ifndef kOmegaSSTStableBase_H
 #define kOmegaSSTStableBase_H
 
+#if OFFLAVOUR == 2 & OFVERSION >= 1812
+    #include "gravityMeshObject.H"
+    #include "addToRunTimeSelectionTable.H"
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -377,7 +382,11 @@ public:
         //- Return the gravity field
         virtual uniformDimensionedVectorField grav() const
         {
-            return this->mesh_.objectRegistry::lookupObject<uniformDimensionedVectorField>("g");
+            #if OFFLAVOUR == 2 & OFVERSION >= 1812
+                return meshObjects::gravity::New(this->mesh_.time());
+            #else
+                return this->mesh_.objectRegistry::lookupObject<uniformDimensionedVectorField>("g");
+            #endif
         }
 
         //- Return the stable nut field - Larsen and Fuhrman (2018)

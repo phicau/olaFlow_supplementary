@@ -22,7 +22,6 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
 #include "IncompressibleTurbulenceModel.H"
 #include "transportModel.H"
 #include "addToRunTimeSelectionTable.H"
