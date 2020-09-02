@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export defaultFolder=turbulenceMultiphaseLibrary_OF_old
+
 if [ $WM_PROJECT == "foam" ]; then
     # FOAM-Extend
     export OF_VERSION=`echo $WM_PROJECT_VERSION | sed -e 's/\.x/-9/' -e 's/\./\'$'\n/g' -e 's/-/\'$'\n/g' | grep "[0-9]" | head -2 | tr -d '\n'`
@@ -10,16 +12,27 @@ else
         # OpenFOAM +
         export OF_VERSION=`echo $WM_PROJECT_VERSION"-0" | sed -e 's/v//' -e 's/+//' -e 's/\.x/-9/' -e 's/\./\'$'\n/g' -e 's/-/\'$'\n/g' | grep "[0-9]" | head -3 | tr -d '\n' | head -c4`
         export OF_FLAVOUR=2
+
+        if [ $OF_VERSION -ge 2006 ]; then
+            export defaultFolder=turbulenceMultiphaseLibrary_OFCOM_2006+
+        fi
     else
         # OpenFOAM
         export OF_VERSION=`echo $WM_PROJECT_VERSION"-00" | sed -e 's/v//' -e 's/+//' -e 's/\.x/-9/' -e 's/\./\'$'\n/g' -e 's/-/\'$'\n/g' | grep "[0-9]" | head -3 | tr -d '\n' | head -c3`
         export OF_FLAVOUR=3
+
+        if [ $OF_VERSION -lt 1 ]; then
+            # Dev version
+            export defaultFolder=turbulenceMultiphaseLibrary_OFORG_8+
+        elif [ $OF_VERSION -ge 800 ]; then
+            export defaultFolder=turbulenceMultiphaseLibrary_OFORG_8+
+        fi
     fi
 fi
 
 wclean all > /dev/null
 
-wmake libso
+wmake libso $defaultFolder
 
 if (( $? )) ; then 
     echo "olaFlow multiphase turbulence library compilation failed"

@@ -9,7 +9,7 @@ This repository provides modified versions of k-ε and k-ω SST turbulence model
 
 Moreover, new variations of the k-ω SST model were recently proposed in two excellent papers by Devolder et al. (2017, 2018) and Larsen & Fuhrman (2018) to model free surface cases (e.g. waves) correctly. The new models (*kOmegaSSTBuoyancy*, *kOmegaSSTStable*) feature an additional buoyancy term that helps suppress the spurious turbulence generation at the free surface. *kOmegaSSTStable* also includes a modified *nut* formulation to convert mitigate the instability.
 
-The present implementation is (at least) compatible with OpenFOAM 5/6/dev and OpenFOAM v1712-v1806.
+The present implementation is (at least) compatible with OpenFOAM 8/dev and OpenFOAM 2006+.
 
 All the turbulence models in this library have been developed from the default turbulence models available in OpenFOAM, based on the references given.
 
@@ -37,9 +37,10 @@ Then, select either of the following in *turbulenceProperties*:
 
 # Contents
 
-## turbulenceMultiphaseLibrary
+## turbulenceMultiphaseLibrary_*
 
-The library includes an *allMake* script for automatic compilation.
+The library includes an *allMake* script for automatic compilation.  
+Currently compatible with all OpenFOAM versions up to 8 and 2006+.
 
 ## Tutorials/turbulenceMultiphaseFlume
 
