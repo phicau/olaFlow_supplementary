@@ -24,9 +24,19 @@ else
         if [ $OF_VERSION -lt 1 ]; then
             # Dev version
             export defaultFolder=turbulenceMultiphaseLibrary_OFORG_8+
+            export OF_VERSION=9999
         elif [ $OF_VERSION -ge 800 ]; then
             export defaultFolder=turbulenceMultiphaseLibrary_OFORG_8+
         fi
+    fi
+fi
+
+# Set Make/options
+if [ $OF_FLAVOUR -eq 3 ]; then
+    if [ $OF_VERSION -ge 900 ]; then
+        cp $defaultFolder/Make/options_9+ $defaultFolder/Make/options
+    elif [ $OF_VERSION -ge 800 ]; then
+        cp $defaultFolder/Make/options_8+ $defaultFolder/Make/options
     fi
 fi
 
@@ -41,4 +51,11 @@ if (( $? )) ; then
 fi
 
 wclean all > /dev/null
+
+# Reset Make/options
+if [ $OF_FLAVOUR -eq 3 ]; then
+    if [ $OF_VERSION -ge 800 ]; then
+        rm $defaultFolder/Make/options
+    fi
+fi
 

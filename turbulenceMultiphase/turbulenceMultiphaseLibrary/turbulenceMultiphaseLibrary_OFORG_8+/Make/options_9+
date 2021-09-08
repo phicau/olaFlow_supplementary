@@ -1,0 +1,14 @@
+EXE_INC = \
+    -DOFVERSION=$(OF_VERSION) \
+    -DOFFLAVOUR=$(OF_FLAVOUR) \
+    -I$(LIB_SRC)/MomentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lmomentumTransportModels \
+    -lincompressibleMomentumTransportModels \
+    -ltransportModels \
+    -lfiniteVolume \
+    -lmeshTools

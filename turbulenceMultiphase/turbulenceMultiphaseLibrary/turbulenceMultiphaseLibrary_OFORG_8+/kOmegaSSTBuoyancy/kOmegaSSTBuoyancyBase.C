@@ -24,7 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSSTBuoyancyBase.H"
-#include "fvOptions.H"
+#if OFVERSION >= 900
+    #include "fvModels.H"
+    #include "fvConstraints.H"
+#else 
+    #include "fvOptions.H"
+#endif
 #include "bound.H"
 #include "wallDist.H"
 #include "uniformDimensionedFields.H"
@@ -122,7 +127,11 @@ void kOmegaSSTBuoyancy<MomentumTransportModel, BasicMomentumTransportModel>::cor
 {
     this->nut_ = a1_*k_/max(a1_*omega_, b1_*F2*sqrt(S2));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    #if OFVERSION >= 900
+        fvConstraints::New(this->mesh_).constrain(this->nut_);
+    #else
+        fv::options::New(this->mesh_).correct(this->nut_);
+    #endif
 }
 
 
@@ -440,9 +449,13 @@ void kOmegaSSTBuoyancy<MomentumTransportModel, BasicMomentumTransportModel>::cor
     const surfaceScalarField alphaRhoPhi = this->alphaRhoPhi_*fvc::interpolate(rho);
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    #if OFVERSION <= 1
-        const fv::options& fvOptions(fv::options::New(this->mesh_));
-    #else
+    #if OFVERSION >= 900
+        const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+        const Foam::fvConstraints& fvConstraints
+        (
+            Foam::fvConstraints::New(this->mesh_)
+        );
+    #else 
         fv::options& fvOptions(fv::options::New(this->mesh_));
     #endif
 
@@ -497,14 +510,25 @@ void kOmegaSSTBuoyancy<MomentumTransportModel, BasicMomentumTransportModel>::cor
             )
           + Qsas(S2(), gamma, beta)
           + omegaSource()
+            #if OFVERSION >= 900
+          + fvModels.source(alpha, rho, omega_)
+            #else 
           + fvOptions(alpha, rho, omega_)
+            #endif
         );
 
         omegaEqn.ref().relax();
-        fvOptions.constrain(omegaEqn.ref());
-        omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
-        solve(omegaEqn);
-        fvOptions.correct(omega_);
+        #if OFVERSION >= 900
+            fvConstraints.constrain(omegaEqn.ref());
+            omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
+            solve(omegaEqn);
+            fvConstraints.constrain(omega_);
+        #else 
+            fvOptions.constrain(omegaEqn.ref());
+            omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
+            solve(omegaEqn);
+            fvOptions.correct(omega_);
+        #endif
         bound(omega_, this->omegaMin_);
     }
 
@@ -520,13 +544,23 @@ void kOmegaSSTBuoyancy<MomentumTransportModel, BasicMomentumTransportModel>::cor
       - fvm::Sp(alpha()*rho()*epsilonByk(F1, F23), k_)
       - this->nut_/sigmaT_*(grav()&fvc::grad(rho)) // Buoyancy term
       + kSource()
+        #if OFVERSION >= 900
+      + fvModels.source(alpha, rho, k_)
+        #else 
       + fvOptions(alpha, rho, k_)
+        #endif
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
-    solve(kEqn);
-    fvOptions.correct(k_);
+    #if OFVERSION >= 900
+        fvConstraints.constrain(kEqn.ref());
+        solve(kEqn);
+        fvConstraints.constrain(k_);
+    #else 
+        fvOptions.constrain(kEqn.ref());
+        solve(kEqn);
+        fvOptions.correct(k_);
+    #endif
     bound(k_, this->kMin_);
 
     correctNut(S2, F23);

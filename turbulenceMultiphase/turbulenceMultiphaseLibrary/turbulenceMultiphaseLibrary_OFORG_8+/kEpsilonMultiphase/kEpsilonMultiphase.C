@@ -24,7 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilonMultiphase.H"
-#include "fvOptions.H"
+#if OFVERSION >= 900
+    #include "fvModels.H"
+    #include "fvConstraints.H"
+#else 
+    #include "fvOptions.H"
+#endif
 #include "bound.H"
 #include "uniformDimensionedFields.H"
 
@@ -42,7 +47,11 @@ void kEpsilonMultiphase<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    #if OFVERSION >= 900
+        fvConstraints::New(this->mesh_).constrain(this->nut_);
+    #else 
+        fv::options::New(this->mesh_).correct(this->nut_);
+    #endif
 }
 
 
@@ -229,9 +238,13 @@ void kEpsilonMultiphase<BasicMomentumTransportModel>::correct()
     const surfaceScalarField alphaRhoPhi = this->alphaRhoPhi_*fvc::interpolate(rho);
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    #if OFVERSION <= 1
-        const fv::options& fvOptions(fv::options::New(this->mesh_));
-    #else
+    #if OFVERSION >= 900
+        const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+        const Foam::fvConstraints& fvConstraints
+        (
+            Foam::fvConstraints::New(this->mesh_)
+        );
+    #else 
         fv::options& fvOptions(fv::options::New(this->mesh_));
     #endif
 
@@ -264,14 +277,25 @@ void kEpsilonMultiphase<BasicMomentumTransportModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_ - C3_)*alpha()*rho()*divU, epsilon_)
       - fvm::Sp(C2_*alpha()*rho()*epsilon_()/k_(), epsilon_)
       + epsilonSource()
+        #if OFVERSION >= 900
+      + fvModels.source(alpha, rho, epsilon_)
+        #else 
       + fvOptions(alpha, rho, epsilon_)
+        #endif
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
-    solve(epsEqn);
-    fvOptions.correct(epsilon_);
+    #if OFVERSION >= 900
+        fvConstraints.constrain(epsEqn.ref());
+        epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+        solve(epsEqn);
+        fvConstraints.constrain(epsilon_);
+    #else 
+        fvOptions.constrain(epsEqn.ref());
+        epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+        solve(epsEqn);
+        fvOptions.correct(epsilon_);
+    #endif
     bound(epsilon_, this->epsilonMin_);
 
     // Turbulent kinetic energy equation
@@ -285,13 +309,23 @@ void kEpsilonMultiphase<BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
       - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
       + kSource()
+        #if OFVERSION >= 900
+      + fvModels.source(alpha, rho, k_)
+        #else 
       + fvOptions(alpha, rho, k_)
+        #endif
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
-    solve(kEqn);
-    fvOptions.correct(k_);
+    #if OFVERSION >= 900
+        fvConstraints.constrain(kEqn.ref());
+        solve(kEqn);
+        fvConstraints.constrain(k_);
+    #else 
+        fvOptions.constrain(kEqn.ref());
+        solve(kEqn);
+        fvOptions.correct(k_);
+    #endif
     bound(k_, this->kMin_);
 
     correctNut();

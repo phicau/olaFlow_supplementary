@@ -23,7 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 #include "IncompressibleMomentumTransportModel.H"
-#include "transportModel.H"
+#if OFVERSION >= 900
+    #include "kinematicTransportModel.H"
+#else 
+    #include "transportModel.H"
+#endif
 #include "addToRunTimeSelectionTable.H"
 #include "makeMomentumTransportModel.H"
 
@@ -48,13 +52,22 @@ makeMomentumTransportModelTypes
     geometricOneField,
     incompressibleMomentumTransportModel,
     IncompressibleMomentumTransportModel,
-    transportModel
+    #if OFVERSION >= 900
+        kinematicTransportModel
+    #else 
+        transportModel
+    #endif
 );
 
-#define makeRASModel(Type)                                                     \
-makeTemplatedMomentumTransportModel                                            \
-(transportModelIncompressibleMomentumTransportModel, RAS, Type)
-
+#if OFVERSION >= 900
+    #define makeRASModel(Type)                                                 \
+    makeTemplatedMomentumTransportModel                                        \
+    (kinematicTransportModelIncompressibleMomentumTransportModel, RAS, Type)
+#else
+    #define makeRASModel(Type)                                                 \
+    makeTemplatedMomentumTransportModel                                        \
+    (transportModelIncompressibleMomentumTransportModel, RAS, Type)
+#endif
 
 // -------------------------------------------------------------------------- //
 // RAS models
